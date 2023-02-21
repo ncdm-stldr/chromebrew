@@ -12,9 +12,9 @@ class Helix_editor < Package
   depends_on 'rust' => :build
   depends_on 'xdg_base'
 
-  no_fhs
-  no_shrink
-  no_strip
+  @no_fhs = true
+  @no_shrink = true
+  @no_strip = true
 
   @xdg_config_home = ENV.fetch 'XDG_CONFIG_HOME', "#{CREW_PREFIX}/.config"
   @helix_runtime_dir = "#{@xdg_config_home}/helix"
@@ -63,11 +63,11 @@ class Helix_editor < Package
     EOT2
   end
 
-  def ask_to_remove_user_defined_config_files_in(dir)
+  def self.ask_to_remove_user_defined_config_files_in(dir)
     puts "\nRemove user defined files in folder: #{dir}? [y/N] "
     case $stdin.gets.chomp.downcase
     when 'y', 'yes'
-      FileUtils.rm_rf config_dir.to_s
+      FileUtils.rm_rf dir.to_s
       puts "#{dir} removed.".lightgreen
     else
       puts "#{dir} was not removed.".lightblue
